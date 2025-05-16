@@ -1,0 +1,21 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.wraper {
+  border: 1px solid black;
+  padding: 20px;
+}
+
+.input {
+  width: 310px;
+  height: 35px;
+  margin-bottom: 20px;
+}
+
+button {
+  width: 70px;
+  height: 70px;
+  margin: 3px;
+}
