@@ -1,4 +1,23 @@
 <?php
+include 'trig_functions.php';
+
+// Чтение выражения из файла
+$expression = file_get_contents(__DIR__ . '/expression.txt');
+
+// Замена тригонометрических выражений
+$expression = preg_replace_callback('/(sin|cos|tan|cot|sec|csc)\\(([^)]+)\\)/i', function($matches) {
+    $func = $matches[1];
+    $value = eval('return ' . $matches[2] . ';');
+    return calculateTrig($func, $value);
+}, $expression);
+
+// Вычисление итогового выражения
+$result = eval('return ' . $expression . ';');
+?>
+
+
+
+<?php
 // Обработка POST-запроса
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['expression'])) {
     $expr = str_replace(' ', '', $_POST['expression']); // удаляем пробелы
@@ -83,7 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['expression'])) {
 <html>
 <head>
     <title>Калькулятор</title>
-    <link rel="stylesheet" href="./style.css">
     <script>
         function append(char) {
             document.getElementById("expression").value += char;
@@ -109,6 +127,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['expression'])) {
         }
     </script>
 </head>
+<style>
+    body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.wraper {
+  border: 1px solid black;
+  padding: 20px;
+  max-width: 320px;
+}
+
+.input {
+  width: 310px;
+  height: 35px;
+  margin-bottom: 20px;
+}
+
+button {
+  width: 70px;
+  height: 70px;
+  margin: 3px;
+}
+</style>
 <body>
     <div class="wraper">
         <input type="text" id="expression" readonly class="input"><br>
@@ -131,5 +174,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['expression'])) {
         <button onclick="clearDisplay()">C</button>
         <button onclick="calculate()">=</button>
     </div>
+    <?php 
+    echo "<h3>Результат выражения из файла: $result</h3>";
+    ?>
 </body>
 </html>
